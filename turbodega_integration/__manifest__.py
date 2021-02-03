@@ -7,7 +7,7 @@
     "support": "odoo.com",
     "summary": """
     Extends the REST API TURBODEGA
-    agregar un botón que obtenga el resourceid
+    Agregar un botón que obtenga el resourceid
 
     """,
     "license": "LGPL-3",
