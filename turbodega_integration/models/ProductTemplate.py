@@ -43,10 +43,8 @@ class ProductTemplate(models.Model):
         # if producto_1.type == "product":
         stock_level = producto_1.qty_available
         tb_data = {
-            # resourceId": "DPE100028",
-            # "resourceId": producto_1.company_id_turbodega.resourceId,
             "resourceId": self.env.company.resourceId,
-            "distributorSKU": "ODOO" + str(producto_1.id).zfill(5),
+            "distributorSKU": str(producto_1.id).zfill(5),
             "distributorProductId": producto_1.default_code,
             "openerp_product_uom": producto_1.uom_id.id,
             "name": producto_1.name,

@@ -74,7 +74,7 @@ class ResPartner(models.Model):
             doc_dni = self.vat
 
         tb_data = {
-            "code": "ODOO" + str(partner_1.id).zfill(5),
+            "code": str(partner_1.id).zfill(5),
             "name": partner_1.name,
             "address": tb_address,
             "dni": doc_dni,
