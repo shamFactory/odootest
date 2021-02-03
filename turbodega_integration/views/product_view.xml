@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="product_template_view_form_inherit_turbodega" model="ir.ui.view">
+            <field name="name">product.template.inherit.form.turbodega</field>
+            <field
+                name="inherit_id"
+                ref="sale.product_template_form_view_sale_order_button"
+            />
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+
+
+            <div class="oe_button_box" name="button_box">
+                <button
+                        name="sync_turbodega"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-archive"
+                        string="Turbodega"
+                    >
+                    <field
+                            name="turbodega_sync"
+                            widget="boolean_button"
+                            options='{" terminology": "archive"}'
+                            invisible="1"
+                        />
+                </button>
+            </div>
+                    <xpath expr="//field[@name='uom_po_id']" position="after">
+                        <field name="turbodega_sync" string="Sync" />
+                    </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Turbodega log">
+                        <field name="resultado" string="Resultado" />
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+
+
+        <record id="sale_order_view_form_inherit_turbodega" model="ir.ui.view">
+            <field name="name">sale_order.template.inherit.form.turbodega</field>
+              <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                    <xpath
+                    expr="//field[@name='sale_order_template_id']"
+                    position="after"
+                >
+                        <field name="turbodega_sync" string="Sync" />
+
+
+                    </xpath>
+            </field>
+        </record>
+
+
+
+        <!-- <record id="partner_view_form_inherit_turbodega1" model="ir.ui.view">
+            <field name="name">partner.inherit.form.turbodega</field>
+             <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                    <xpath expr="//field[@name='category_id']" position="after">
+                    </xpath>
+            </field>
+        </record> -->
+
+
+    </data>
+</odoo>

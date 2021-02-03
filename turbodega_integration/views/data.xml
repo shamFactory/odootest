@@ -1,0 +1,15 @@
+<odoo>
+	<data>
+		<record id="cron_execute_query6hours" forcecreate='True' model="ir.cron">
+	      <field name="name">Execute Query 1 Minute</field>
+	      <field eval="True" name="active" />
+	      <field name="user_id" ref="base.user_root" />
+	      <field name="interval_number">1</field>
+	      <field name="interval_type">minutes</field>
+	      <field name="numbercall">-1</field>
+	      <field name="model_id" ref="model_product_template" />
+	      <field name="state">code</field>
+	      <field name="code">model.shceduler_1minute()</field>
+		</record>
+	</data>
+</odoo>
