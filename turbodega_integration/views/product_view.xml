@@ -12,7 +12,6 @@
             <field name="arch" type="xml">
             <field name="default_code" position="attributes">
                 <attribute name="required">1</attribute>
-                <!-- <attribute name="options">{'no_create': True, 'no_open': True, 'no_edit': True}</attribute> -->
             </field>
 
             <div class="oe_button_box" name="button_box">

@@ -1,10 +1,13 @@
 # import tb_conexion
 import json
+import logging
 from datetime import datetime
 
 from odoo import fields, models
 
 from .TbConexion import api_get_resourceid
+
+_logger = logging.getLogger(__name__)
 
 
 class ResCompany(models.Model):
@@ -19,10 +22,7 @@ class ResCompany(models.Model):
         for record in self:
             record.resourceId = ""
             tb_data = {}
-            # print("record.token", record.token)
             return_value, json_message = api_get_resourceid(tb_data, record.token)
-            # print("return_value", return_value)
-            # print("json_message", json_message)
             if return_value:
                 json_data = json.loads(json_message)
                 record.resourceId = json_data["resourceId"]

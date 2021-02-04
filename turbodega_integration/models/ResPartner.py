@@ -1,5 +1,4 @@
 # import tb_conexion
-import time
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -27,7 +26,6 @@ class ResPartner(models.Model):
         if not vals["country_id"]:
             raise UserError(_("Necesita especificar un país."))
         self.env["sync.api"].sync_api(id_product=result.id, model="res.partner")
-        time.sleep(1)
         return result
 
     def write(self, vals):
@@ -90,3 +88,14 @@ class ResPartner(models.Model):
             if vals.get(data, False):
                 return True
         return False
+
+    def scheduler_1minute(self):
+        list_productos = self.env["res.partner"].search(
+            [("turbodega_creation", "=", False)]
+        )
+        for data in list_productos:
+            self.env["sync.api"].sync_api(id_product=data.id, model="res.partner")
+
+    def sync_turbodega(self):
+        for record in self:
+            self.env["sync.api"].sync_update(id_product=record.id, model="res.partner")

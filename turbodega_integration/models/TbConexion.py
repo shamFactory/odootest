@@ -1,6 +1,9 @@
 import json
+import logging
 
 import requests
+
+_logger = logging.getLogger(__name__)
 
 
 class TBClient(object):
@@ -30,18 +33,20 @@ class TBClient(object):
 
             if self._method == "GET":
                 json_data = json.dumps(data)
-                # print("url---GET-------------->", url)
-                # print("url----------------->", headers)
-                # print("url----------------->", json_data)
+                _logger.info("url---GET-------------->")
+                _logger.info(url)
+                _logger.info(headers)
+                _logger.info(json_data)
                 r = requests.get(
                     url, headers=headers, params=json_data, timeout=self._timeout
                 )
 
             elif self._method == "POST":
                 json_data = json.dumps(data)
-                # print("url---POST-------------->", url)
-                # print("url----------------->", headers)
-                # print("url----------------->", json_data)
+                _logger.info("----------POST")
+                _logger.info(url)
+                _logger.info(headers)
+                _logger.info(json_data)
                 r = requests.post(
                     url,
                     headers=headers,
@@ -50,10 +55,11 @@ class TBClient(object):
                 )
             elif self._method == "PUT":
                 json_data = json.dumps(data)
+                _logger.info("----------PUT")
 
-                # print("url--PUT--------------->", url)
-                # print("url----------------->", headers)
-                # print("url----------------->", json_data)
+                _logger.info(url)
+                _logger.info(headers)
+                _logger.info(json_data)
                 r = requests.put(
                     url,
                     headers=headers,

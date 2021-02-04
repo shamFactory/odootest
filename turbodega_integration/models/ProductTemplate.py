@@ -1,6 +1,10 @@
+import logging
+
 from odoo import api, fields, models
 
 from .TbConexion import api_send_product, api_update_product
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -74,6 +78,7 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         result = super(ProductTemplate, self).write(vals)
+        _logger.info(vals)
         if self.to_json_validation(
             vals,
             [
@@ -92,14 +97,23 @@ class ProductTemplate(models.Model):
             self.env["sync.api"].sync_update(self.id, model="product.template")
         return result
 
-    def shceduler_1minute(self):
+    def scheduler_1minute(self):
         list_productos = self.env["product.template"].search(
             [("turbodega_creation", "=", False)]
         )
         for data in list_productos:
             self.env["sync.api"].sync_api(id_product=data.id, model="product.template")
 
+        list_productos = self.env["product.template"].search(
+            [("turbodega_sync", "=", False)]
+        )
+        for data in list_productos:
+            self.env["sync.api"].sync_update(
+                id_product=data.id, model="product.template"
+            )
+
     def sync_turbodega(self):
+
         for record in self:
             self.env["sync.api"].sync_api(
                 id_product=record.id, model="product.template"
