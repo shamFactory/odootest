@@ -1,5 +1,5 @@
 from . import TbConexion
-from . import SaleOrder
+#from . import SaleOrder
 from . import ResPartner
 from . import ResCompany
 from . import ProductTemplate
