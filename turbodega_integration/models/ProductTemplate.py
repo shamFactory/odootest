@@ -13,6 +13,15 @@ class ProductTemplate(models.Model):
     turbodega_sync = fields.Boolean(string="Sync", default=False)
     turbodega_creation = fields.Boolean(string="Create", default=False)
     turbodega_sync_date = fields.Datetime("datetime")
+    turbodega_type_entity = fields.Selection(
+        [
+            ("turbodega", "Tienda turbodega"),
+            ("otro", "Otro"),
+        ],
+        "Tipo",
+        required=True,
+        default="turbodega",
+    )
 
     company_id_turbodega = fields.Many2one(
         "res.company",
@@ -29,6 +38,11 @@ class ProductTemplate(models.Model):
 
     def to_json_turbodega(self):
         producto_1 = self.env["product.template"].browse(self.id)
+        producto_product_1 = self.env["product.product"].search(
+            [("product_tmpl_id", "=", self.id)]
+        )
+        _logger.error(producto_product_1)
+        _logger.error(producto_product_1[0].name)
         pricelist_1 = self.env["product.pricelist.item"].search(
             [("product_tmpl_id", "=", self.id)]
         )
@@ -48,7 +62,8 @@ class ProductTemplate(models.Model):
         stock_level = producto_1.qty_available
         tb_data = {
             "resourceId": self.env.company.resourceId,
-            "distributorSKU": str(producto_1.id).zfill(5),
+            # "distributorSKU": str(producto_1.id).zfill(5),
+            "distributorSKU": str(producto_product_1.id).zfill(5),
             "distributorProductId": producto_1.default_code,
             "openerp_product_uom": producto_1.uom_id.id,
             "name": producto_1.name,

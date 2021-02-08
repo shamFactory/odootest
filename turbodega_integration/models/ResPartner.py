@@ -13,6 +13,15 @@ class ResPartner(models.Model):
     turbodega_sync_date = fields.Datetime("datetime")
     turbodega_creation = fields.Boolean(string="Create", default=False)
     dniresponsable = fields.Char(string="Dni responsable")
+    turbodega_type_entity = fields.Selection(
+        [
+            ("turbodega", "Tienda turbodega"),
+            ("otro", "Otro"),
+        ],
+        "Tipo",
+        required=True,
+        default="otro",
+    )
 
     def api_send(self, tb_data):
         return api_send_partner(tb_data, self.env.company.token)
