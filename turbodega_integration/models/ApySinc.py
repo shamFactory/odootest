@@ -27,14 +27,11 @@ class SyncApi(models.Model):
                 model_1.turbodega_sync = True
                 model_1.turbodega_creation = True
                 model_1.turbodega_sync_date = datetime.now()
-                # model_1.resultado = "envío correcto"
                 transaccion_status = "done"
                 json_message = json.loads(json_message)
             else:
                 transaccion_status = "error"
-                # json_message =json.loads(json_message)
                 error_data = json_message["faultcode"]
-            # print("json_message", json_message)
             event_obj.update(
                 {
                     "json_out": json.dumps(json_message, indent=4, sort_keys=True),
