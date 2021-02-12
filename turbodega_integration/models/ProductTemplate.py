@@ -59,6 +59,9 @@ class ProductTemplate(models.Model):
         tb_data = {}
         # stock_level = "-"
         # if producto_1.type == "product":
+        tax = False
+        if producto_1.taxes_id:
+            tax = producto_1.taxes_id[0].id
         stock_level = producto_1.qty_available
         tb_data = {
             "resourceId": self.env.company.resourceId,
@@ -80,6 +83,7 @@ class ProductTemplate(models.Model):
             "salesUnitPerBox": False,
             "weight": producto_1.weight,
             "currency": producto_1.currency_id.name,
+            "openerp_tax_id": tax,
         }
         if producto_1.list_price:
             tb_data["prices"] = prices_lines
@@ -107,6 +111,7 @@ class ProductTemplate(models.Model):
                 "weight",
                 "currency_id",
                 "qty_available",
+                "taxes_id",
             ],
         ):
             self.env["sync.api"].sync_update(self.id, model="product.template")

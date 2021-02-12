@@ -13,6 +13,9 @@
             <field name="default_code" position="attributes">
                 <attribute name="required">1</attribute>
             </field>
+            <field name="taxes_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
 
             <div class="oe_button_box" name="button_box">
                 <button

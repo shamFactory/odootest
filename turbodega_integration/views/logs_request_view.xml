@@ -15,7 +15,9 @@
                         <group>
                             <group>
                                                     <field name="model_type" />
-                    <field name="type_operation" />
+                                                    <field name="endpoint" />
+
+                    <field name="type_operation" string="Method" />
 
                                 <field name="company_id" readonly="1" />
                             </group>

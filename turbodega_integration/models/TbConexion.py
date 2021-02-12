@@ -47,6 +47,7 @@ class TBClient(object):
                 _logger.info(url)
                 _logger.info(headers)
                 _logger.info(json_data)
+
                 r = requests.post(
                     url,
                     headers=headers,
@@ -69,20 +70,22 @@ class TBClient(object):
                 # print("r>>>>>>>>>>>>>>>>>>>>>>>>>>>>><", r)
 
             if r.status_code == 200:
-                # CONEXION VALIDA
-                # return True, {"response": r.text}
-                return True, r.text
+                return True, r.text, url
 
             else:
                 # ERROR EN LA CONEXION
                 # print("r.status_code", r.status_code)
-                return False, {
-                    "faultcode": r.status_code,
-                    "faultstring": r.text,
-                }
+                return (
+                    False,
+                    {
+                        "faultcode": r.status_code,
+                        "faultstring": r.text,
+                    },
+                    url,
+                )
 
         except Exception as e:
-            return False, {"faultcode": "000", "faultstring": e}
+            return False, {"faultcode": "000", "faultstring": e}, url
 
     def api_get_resourceid(self, tb_data, token):
         return self._call_api(self._resourceId, data=tb_data, token=token, method="GET")

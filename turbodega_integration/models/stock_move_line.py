@@ -23,8 +23,6 @@ class StockMoveLine(models.Model):
 
     def write(self, vals):
         result = super(StockMoveLine, self).write(vals)
-        _logger.warn("update")
-        _logger.warn(vals)
-        _logger.warning(self.product_id.name)
+        _logger.error(self.product_id.name)
         self.product_id.turbodega_sync = False
         return result

@@ -16,12 +16,12 @@ class SyncApi(models.Model):
             log_data = {
                 "name": "sync",
                 "model_type": model,
-                "type_operation": "creation",
+                "type_operation": "POST",
                 "json_in": json.dumps(tb_data, indent=4, sort_keys=True),
                 "stages_id": "new",
             }
             event_obj = self.env["logs.request"].sudo().create(log_data)
-            return_value, json_message = model_1.api_send(tb_data)
+            return_value, json_message, url_endpoint = model_1.api_send(tb_data)
             error_data = ""
             if return_value:
                 model_1.turbodega_sync = True
@@ -40,6 +40,7 @@ class SyncApi(models.Model):
                     "json_out": json.dumps(json_message, indent=4, sort_keys=True),
                     "error_details": error_data,
                     "stages_id": transaccion_status,
+                    "endpoint": url_endpoint,
                 }
             )
 
@@ -48,17 +49,18 @@ class SyncApi(models.Model):
         model_1 = self.env[model].browse(id_product)
         if model_1.turbodega_type_entity == "turbodega":
             if model_1.turbodega_creation:
-                # print("creations--------------->")
                 tb_data = model_1.to_json_turbodega()
                 log_data = {
                     "name": "sync",
                     "model_type": model,
-                    "type_operation": "update",
+                    "type_operation": "PUT",
                     "json_in": json.dumps(tb_data, indent=4, sort_keys=True),
                     "stages_id": "new",
                 }
                 event_obj = self.env["logs.request"].sudo().create(log_data)
-                return_value, json_message = model_1.api_update_product(tb_data)
+                return_value, json_message, url_endpoint = model_1.api_update_product(
+                    tb_data
+                )
                 # json_message =json.loads(json_message)
                 error_data = ""
                 if return_value:
@@ -74,5 +76,6 @@ class SyncApi(models.Model):
                         "json_out": json.dumps(json_message, indent=4, sort_keys=True),
                         "error_details": error_data,
                         "stages_id": transaccion_status,
+                        "endpoint": url_endpoint,
                     }
                 )
