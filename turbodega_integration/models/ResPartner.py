@@ -1,7 +1,4 @@
-# import tb_conexion
-
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo import fields, models
 
 from .TbConexion import api_send_partner, api_update_partner
 
@@ -20,7 +17,8 @@ class ResPartner(models.Model):
         ],
         "Tipo",
         required=True,
-        default="otro",
+        default="",
+        track_visibility="always",
     )
 
     def api_send(self, tb_data):
@@ -29,42 +27,11 @@ class ResPartner(models.Model):
     def api_update_product(self, tb_data):
         return api_update_partner(tb_data, self.env.company.token)
 
-    @api.model
-    def create(self, vals):
-        result = super(ResPartner, self).create(vals)
-        if not vals["country_id"]:
-            raise UserError(_("Necesita especificar un país."))
-        self.env["sync.api"].sync_api(id_product=result.id, model="res.partner")
-        return result
-
-    def write(self, vals):
-        result = super(ResPartner, self).write(vals)
-        if self.to_json_validation(
-            vals,
-            [
-                "street_name",
-                "country_id",
-                "partner_latitude",
-                "partner_longitude",
-                "state_id",
-                "zip",
-                "tb_geocoord",
-                "name",
-                "mobile",
-                "industry_id",
-                "comment",
-                "l10n_latam_identification_type_id",
-                "vat",
-            ],
-        ):
-            self.env["sync.api"].sync_update(self.id, model="res.partner")
-        return result
-
     def to_json_turbodega(self):
         partner_1 = self.env["res.partner"].browse(self.id)
         tb_geocoord = [partner_1.partner_latitude, partner_1.partner_longitude]
         tb_address = {
-            "street": partner_1.street_name,
+            "street1": partner_1.street_name,
             "town": partner_1.state_id.name or "",
             "postalCode": partner_1.zip or "",
             "adminDivision": False,
@@ -99,12 +66,8 @@ class ResPartner(models.Model):
         return False
 
     def scheduler_1minute(self):
-        list_productos = self.env["res.partner"].search(
-            [("turbodega_creation", "=", False)]
-        )
-        for data in list_productos:
-            self.env["sync.api"].sync_api(id_product=data.id, model="res.partner")
+        self.env["sync.api"].scheduler_1minute(model="res.partner")
 
     def sync_turbodega(self):
         for record in self:
-            self.env["sync.api"].sync_update(id_product=record.id, model="res.partner")
+            self.env["sync.api"].sync_turbodega(id_turbo=record.id, model="res.partner")

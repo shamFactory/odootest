@@ -92,7 +92,8 @@
                     <field name="create_date" string="Creado en" />
                     <field name="model_type" />
                     <field name="type_operation" />
-					<field name="stages_id" />
+                    <field name="json_in" />
+                    <field name="stages_id" />
                 </tree>
             </field>
         </record>

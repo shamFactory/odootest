@@ -25,6 +25,7 @@
                                 <field
                                     name="turbodega_sync_date"
                                     string="Última sincronización"
+                                    readonly="True"
                                 />
                                 </group>
                             </group>

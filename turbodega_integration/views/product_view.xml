@@ -17,6 +17,10 @@
                 <attribute name="required">1</attribute>
             </field>
 
+            <field name="company_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+
             <div class="oe_button_box" name="button_box">
                 <button
                         name="sync_turbodega"
@@ -24,6 +28,24 @@
                         class="oe_stat_button"
                         icon="fa-archive"
                         string="Turbodega"
+                        attrs="{'invisible': [('turbodega_sync', '=', False)]}"
+                    >
+                    <field
+                            name="turbodega_sync"
+                            widget="boolean_button"
+                            options='{"terminology": "archive"}'
+                            invisible="1"
+                        />
+                </button>
+            </div>
+                 <div class="oe_button_box" name="button_box">
+                <button
+                        name="sync_turbodega"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-refresh"
+                        string="Turbodega"
+                        attrs="{'invisible': [('turbodega_sync', '=', True)]}"
                     >
                     <field
                             name="turbodega_sync"
@@ -34,11 +56,33 @@
                 </button>
             </div>
                     <xpath expr="//field[@name='uom_po_id']" position="after">
-                        <field name="turbodega_sync" string="Sync" />
+
+                        <field
+                        name="turbodega_type_entity"
+                        string="Tipo Turbodega"
+                        required="1"
+                    />
                     </xpath>
+
                 <xpath expr="//notebook" position="inside">
                     <page string="Turbodega log">
-                        <field name="resultado" string="Resultado" />
+                        <group>
+                            <field
+                                name="turbodega_sync"
+                                string="¿Está Sincronizado?"
+                                readonly="True"
+                            />
+                            <field
+                                name="turbodega_creation"
+                                string="¿Está creado?"
+                                readonly="True"
+                            />
+                            <field
+                                name="turbodega_sync_date"
+                                string="Fecha de sincronización"
+                                readonly="True"
+                            />
+                        </group>
                     </page>
                 </xpath>
             </field>

@@ -1,6 +1,6 @@
 {
     "name": "TURBODEGA - REST API CLIENT -TEST",
-    "version": "13.0.1.1.0",
+    "version": "14.0.1.1.0",
     "author": "Tecnativa",
     "authors": ["Erick Delgado"],
     "category": "Tools",
@@ -14,6 +14,7 @@
     "demo": [],
     "depends": [
         "base",
+        "base_automation",
         "sale_management",
         "contacts",
         "stock",
@@ -30,7 +31,10 @@
         "views/product_view.xml",
         "views/res_company_view.xml",
         "views/partner_view.xml",
-        "views/data.xml",
+        "report/sale_report_templates.xml",
+        "report/stock_picking_report_templates.xml",
+        "views/base_automation.xml",
+        "views/view_product_product.xml",
         "views/logs_request_view.xml",
     ],
     "installable": True,
