@@ -15,14 +15,12 @@ class StockMoveLine(models.Model):
     @api.model
     def create(self, vals):
         result = super(StockMoveLine, self).create(vals)
-        self.product_id.turbodega_sync = False
-        _logger.warn("create")
-        _logger.warn(vals)
-        _logger.warn(self.product_id)
+        _logger.warning("--->create")
+        self.product_id.product_tmpl_id.turbodega_sync = False
         return result
 
     def write(self, vals):
         result = super(StockMoveLine, self).write(vals)
-        _logger.error(self.product_id.name)
-        self.product_id.turbodega_sync = False
+        _logger.warning("--->write")
+        self.product_id.product_tmpl_id.turbodega_sync = False
         return result

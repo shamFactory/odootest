@@ -19,7 +19,7 @@
         "contacts",
         "stock",
         "account",
-        "product_manufacturer",
+        "purchase",
         "product_brand",
         "base_address_extended",
         "l10n_latam_base",
@@ -39,3 +39,7 @@
     ],
     "installable": True,
 }
+
+
+#agregar a combo a turbodega
+#agregar el reporte order. detallado de odoo13 a odoo14

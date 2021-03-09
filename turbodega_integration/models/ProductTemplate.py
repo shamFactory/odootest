@@ -27,10 +27,37 @@ class ProductTemplate(models.Model):
     resultado = fields.Text(string="Result", readonly="True")
 
     def api_send(self, tb_data):
-        return api_send_product(tb_data, self.company_id.token)
+        _logger.warning(tb_data)
+        if not self.company_id:
+            raise UserError(_("Company no selected."))
+        return api_send_product(
+            tb_data, self.company_id.token, self.company_id.product_url
+        )
 
     def api_update_product(self, tb_data):
-        return api_update_product(tb_data, self.company_id.token)
+        _logger.error(tb_data)
+        if not self.company_id:
+            raise UserError(_("Company no selected."))
+        return api_update_product(
+            tb_data, self.company_id.token, self.company_id.product_url
+        )
+
+    def update_related(self):
+        _logger.warning("related")
+        producto_product_1 = self.env["product.product"].search(
+            [("product_tmpl_id", "=", self.id)]
+        )
+        for product_product in producto_product_1:
+            mrp_bom_line_1 = self.env["mrp.bom.line"].search(
+                [("product_id", "=", product_product.id)]
+            )
+            for mrp_bom_line in mrp_bom_line_1:
+                mrp_bom_1 = self.env["mrp.bom"].browse(mrp_bom_line.bom_id.id)
+                self.env['sync.api'].sync_turbodega(mrp_bom_1.product_tmpl_id.id, 'product.template')
+
+
+
+
 
     def to_json_turbodega(self):
         producto_1 = self.env["product.template"].browse(self.id)
@@ -58,19 +85,20 @@ class ProductTemplate(models.Model):
         tax = False
         if producto_1.taxes_id:
             tax = producto_1.taxes_id[0].id
+        manufacturer = False
+        if producto_1.seller_ids:
+            manufacturer = producto_1.seller_ids[0].name.name
         stock_level = producto_1.virtual_available
         tb_data = {
             "resourceId": self.company_id.resourceId,
-            # "distributorSKU": str(producto_1.id).zfill(5),
             "distributorSKU": str(producto_product_1.id).zfill(5),
             "distributorProductId": producto_1.default_code,
             "openerp_product_uom": producto_1.uom_id.id,
             "name": producto_1.name,
             "displayName": producto_1.name or "",
             "description": producto_1.description or "",
-            "manufacturer": producto_1.manufacturer.name or "",
+            "manufacturer": manufacturer or "",
             "brand": producto_1.product_brand_id.name or "",
-            # "stockLevel": producto_1.qty_available,
             "stockLevel": stock_level,
             "price": producto_product_1.standard_price_tax_included,
             "prices": prices_lines or False,

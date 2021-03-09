@@ -1,7 +1,9 @@
+import logging
 from odoo import fields, models
 
 from .TbConexion import api_send_partner, api_update_partner
 
+_logger = logging.getLogger(__name__)
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -20,18 +22,26 @@ class ResPartner(models.Model):
         default="",
         track_visibility="always",
     )
+    def update_related(self):
+        _logger.warning("related")
+
+
 
     def api_send(self, tb_data):
-        return api_send_partner(tb_data, self.env.company.token)
+        return api_send_partner(
+            tb_data, self.env.company.token, self.company_id.partner_url
+        )
 
     def api_update_product(self, tb_data):
-        return api_update_partner(tb_data, self.env.company.token)
+        return api_update_partner(
+            tb_data, self.env.company.token, self.company_id.partner_url
+        )
 
     def to_json_turbodega(self):
         partner_1 = self.env["res.partner"].browse(self.id)
         tb_geocoord = [partner_1.partner_latitude, partner_1.partner_longitude]
         tb_address = {
-            "street1": partner_1.street_name,
+            "street1": partner_1.contact_address.replace("\n", " "),
             "town": partner_1.state_id.name or "",
             "postalCode": partner_1.zip or "",
             "adminDivision": False,
@@ -40,12 +50,16 @@ class ResPartner(models.Model):
         }
         doc_ruc = ""
         doc_dni = ""
-        if self.l10n_latam_identification_type_id.name == "RUC":
+        if partner_1.country_id.code == "PE":
+            if self.l10n_latam_identification_type_id.name == "RUC":
+                doc_ruc = self.vat
+                doc_dni = ""
+            if self.l10n_latam_identification_type_id.name == "DNI":
+                doc_ruc = ""
+                doc_dni = self.vat
+        else:
             doc_ruc = self.vat
             doc_dni = ""
-        if self.l10n_latam_identification_type_id.name == "DNI":
-            doc_ruc = ""
-            doc_dni = self.vat
 
         tb_data = {
             "code": str(partner_1.id).zfill(5),
